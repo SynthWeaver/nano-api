@@ -11,31 +11,42 @@ let secrateKey = null;
 
 generateSecrateKey();
 
-router.get('/test', function(req, res, next) {
+function middleware (req, res, next) {
+	res.on('finish', () => {
+        console.log('Response has been sent!');
+        pay();
+    })
+	next();
+}
+
+router.get('/test', middleware, function(req, res, next) {
+	res.render('index', { title: 'Payment requested' });
+});
+
+async function pay() {
 	const nanoaddress = 'nano_1i4f6ymq356dbwjxwn1e83abf7sxd9xajmhfc3qj4jwr56gfx7dwqi8qszge';
 	const amount = 0.000001;
 
-	async function main() {
-		//check if secrate key is ready
-		if(secrateKey == null){
-			console.log("error: secrateKey is not yet loaded")
-			res.render('index', { title: 'please try again' });
-		}
+	//check if secrate key is ready
+	if(secrateKey == null){
+		console.log("error: secrateKey is not yet loaded")
+		res.render('index', { title: 'please try again' });
+	}
 
-		// //recieve pending transactions
-		// const done1 = await nano.fetchPending(secrateKey);
+	// //recieve pending transactions
+	// const done1 = await nano.fetchPending(secrateKey);
 
-		// console.log("Fetch Nano requested");
+	// console.log("Fetch Nano requested");
 
-		// if (done1.hash) {
-		// 	console.log('fetched : ' + done1.hash);
-		// }
+	// if (done1.hash) {
+	// 	console.log('fetched : ' + done1.hash);
+	// }
 
-		console.log("2sec");
+	console.log("2sec");
 
-		res.render('index', { title: '2 seconds' });
+	console.log("Start requesting payment");
 
-		console.log("Start requesting payment");
+	try{
 
 		// send nano to address
 		const done2 = await nano.send(secrateKey, nanoaddress, amount);
@@ -44,15 +55,12 @@ router.get('/test', function(req, res, next) {
 
 		if (done2.hash) {
 			console.log('sent : ' + done2.hash);
-			res.render('index', { title: 'Payment succesfull' });
 		}
-
-		
+	}catch(e){
+		console.log("Error: " + e);
 	}
-
-	main();
-
-});
+	
+}
 
 async function generateSecrateKey(){
 	// nano.gensecretKey(seed, index)
