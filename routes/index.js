@@ -19,7 +19,7 @@ router.get('/test', function(req, res, next) {
 		//check if secrate key is ready
 		if(secrateKey == null){
 			console.log("error: secrateKey is not yet loaded")
-			return;
+			res.render('index', { title: 'please try again' });
 		}
 
 		// //recieve pending transactions
@@ -31,6 +31,10 @@ router.get('/test', function(req, res, next) {
 		// 	console.log('fetched : ' + done1.hash);
 		// }
 
+		console.log("2sec");
+
+		res.render('index', { title: '2 seconds' });
+
 		console.log("Start requesting payment");
 
 		// send nano to address
@@ -40,9 +44,10 @@ router.get('/test', function(req, res, next) {
 
 		if (done2.hash) {
 			console.log('sent : ' + done2.hash);
+			res.render('index', { title: 'Payment succesfull' });
 		}
 
-		res.render('index', { title: 'Express' });
+		
 	}
 
 	main();
