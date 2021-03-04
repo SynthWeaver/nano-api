@@ -19,6 +19,10 @@ const nano = require('nanopay');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	res.render('index', { title: 'Express' });
+});
+
+router.get('/test', function(req, res, next) {
 
 // init nano.init( nanonode, worknode)
 nano.init('https://mynano.ninja/api/node', 'https://besoeasy.com/api/nanopow');
