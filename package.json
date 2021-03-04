@@ -7,8 +7,12 @@
   },
   "private": true,
   "scripts": {
-    "debug": "node ./bin/www",
-    "start": "node app.js"
+    "dev": "react-scripts start",
+    "start": "serve -s build",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
