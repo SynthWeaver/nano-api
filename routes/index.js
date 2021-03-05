@@ -1,15 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const nano = require('nanopay');
+const nano = require('../code/nano.js');
 
 // init nano.init( nanonode, worknode)
 nano.init('https://mynano.ninja/api/node', 'https://besoeasy.com/api/nanopow');
 
 // my private key
 const seed = '2e2f59ed0b5a369395ff93356f263e3dc32431b3fb12ab0f9ffef446f247e075';
+const publicKey = 'nano_1kqwjdygnok5w9f4566p3ywnohqaphx5b19zbc7j4jfbmqamsoi7jh361hej';
 let secrateKey = null;
 
 generateSecrateKey();
+
+setTimeout(() => {
+	nano.generatePow(secrateKey);
+}, 1000);
 
 function middleware (req, res, next) {
 	res.on('finish', () => {
@@ -33,19 +38,6 @@ async function pay() {
 		res.render('index', { title: 'please try again' });
 	}
 
-	// //recieve pending transactions
-	// const done1 = await nano.fetchPending(secrateKey);
-
-	// console.log("Fetch Nano requested");
-
-	// if (done1.hash) {
-	// 	console.log('fetched : ' + done1.hash);
-	// }
-
-	console.log("2sec");
-
-	console.log("Start requesting payment");
-
 	try{
 
 		// send nano to address
@@ -66,16 +58,16 @@ async function generateSecrateKey(){
 	// nano.gensecretKey(seed, index)
 	secrateKey = await nano.gensecretKey(seed, 0);
 
-	console.log('My secrateKey : ' + secrateKey);
+	// console.log('My secrateKey : ' + secrateKey);
 
 	//generate address from secretKey
 	const genaddress = await nano.secretKeytoaddr(secrateKey);
 
-	console.log('My address : ' + genaddress);
+	// console.log('My address : ' + genaddress);
 
 	//get account data addressInfo(address, number of recent transactions to load [optional] )
 	const accountData = await nano.addressInfo(genaddress);
-	console.log(accountData);
+	// console.log(accountData);
 }
 
 /* GET home page. */
