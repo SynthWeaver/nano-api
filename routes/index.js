@@ -8,13 +8,21 @@ nano.init('https://mynano.ninja/api/node', 'https://besoeasy.com/api/nanopow');
 // my private key
 const seed = '2e2f59ed0b5a369395ff93356f263e3dc32431b3fb12ab0f9ffef446f247e075';
 const publicKey = 'nano_1kqwjdygnok5w9f4566p3ywnohqaphx5b19zbc7j4jfbmqamsoi7jh361hej';
-let secrateKey = null;
+let secretKey = null;
 
-generateSecrateKey();
+generateSecretKey();
 
 setTimeout(() => {
-	nano.generatePow(secrateKey);
+	// nano.generatePow(secretKey);
+	test();
 }, 1000);
+
+async function test(){
+	// var secretKey = await nano.gensecretKey(seed, 0);
+	// var address = await nano.secretKeytoaddr(secretKey);
+	var genseed = await nano.genseed();
+	console.log(genseed);
+};
 
 function middleware (req, res, next) {
 	res.on('finish', () => {
@@ -33,15 +41,15 @@ async function pay() {
 	const amount = 0.000001;
 
 	//check if secrate key is ready
-	if(secrateKey == null){
-		console.log("error: secrateKey is not yet loaded")
+	if(secretKey == null){
+		console.log("error: secretKey is not yet loaded")
 		res.render('index', { title: 'please try again' });
 	}
 
 	try{
 
 		// send nano to address
-		const done2 = await nano.send(secrateKey, nanoaddress, amount);
+		const done2 = await nano.send(secretKey, nanoaddress, amount);
 
 		console.log("Payment requested");
 
@@ -51,17 +59,16 @@ async function pay() {
 	}catch(e){
 		console.log("Error: " + e);
 	}
-	
 }
 
-async function generateSecrateKey(){
+async function generateSecretKey(){
 	// nano.gensecretKey(seed, index)
-	secrateKey = await nano.gensecretKey(seed, 0);
+	secretKey = await nano.gensecretKey(seed, 0);
 
-	// console.log('My secrateKey : ' + secrateKey);
+	// console.log('My secretKey : ' + secretKey);
 
 	//generate address from secretKey
-	const genaddress = await nano.secretKeytoaddr(secrateKey);
+	const genaddress = await nano.secretKeytoaddr(secretKey);
 
 	// console.log('My address : ' + genaddress);
 
@@ -74,6 +81,5 @@ async function generateSecrateKey(){
 router.get('/', function(req, res, next) {
 	res.render('index', { title: 'Express' });
 });
-
 
 module.exports = router;

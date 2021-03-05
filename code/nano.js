@@ -10,6 +10,10 @@ function init(var1, var2) {
 	WORKNODE = var2;
 }
 
+async function genseed(seed, index) {
+	return await nanocurrency.generateSeed();
+}
+
 async function gensecretKey(seed, index) {
 	return nanocurrency.deriveSecretKey(seed, parseInt(index));
 }
@@ -80,6 +84,20 @@ async function accountdig(account) {
 		})
 		.then(function (response) {
 			return response.data;
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+}
+
+async function pendingblockdetails(account) {
+	return axios
+		.post(NANONODE, {
+			account: account,
+			action: 'pending',
+		})
+		.then(function (response) {
+			return block_info(response.data.blocks[0]);
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -287,4 +305,4 @@ async function hybirdWork(blockblock) {
 		});
 }
 
-module.exports = { init, hybirdWork, recentBlockcache, fetchPending, sendPercent, send, addressInfo, blockInfo, gensecretKey, secretKeytoaddr, generatePow, pendingblock };
+module.exports = { init, hybirdWork, recentBlockcache, fetchPending, sendPercent, send, addressInfo, blockInfo, gensecretKey, secretKeytoaddr, generatePow, pendingblockdetails, genseed  };
