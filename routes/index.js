@@ -77,8 +77,11 @@ async function generateSecretKey(){
 	// console.log(accountData);
 }
 
+let text = "wakker worden";
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	console.log(text);
+	text = "ben er nog, niet moe";
 	res.render('index', { title: 'Express' });
 });
 
